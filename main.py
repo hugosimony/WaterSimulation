@@ -40,10 +40,13 @@ class Simulation (threading.Thread):
             for i_ in range(-1, 2):
                 for j_ in range(-1, 2):
                     if i_ != j_ and i_ != -j_ and 0 <= x + i_ < n and 0 <= y + j_ < n and concrete[x + i_][y + j_] == 1:
+                        # put water in the eroded concrete hole
                         concrete[x + i_][y + j_] = 2
                         to_treat.append((x + i_, y + j_))
+            # speed of the animation
             time.sleep(self.sec)
         else:
+            # no water can be placed anymore, the animation is over
             print("Done")
 
 
