@@ -39,6 +39,9 @@ class Simulation (threading.Thread):
                                     (y + 1) * (600 / n), fill='blue', outline='blue')
             for i_ in range(-1, 2):
                 for j_ in range(-1, 2):
+                    # only check up, down, on the left and on the right of the actual coordinates
+                    # verify if the checked coordinates are not out of bounds
+                    # check if the checked coordinateds represent an eroded concrete hole
                     if i_ != j_ and i_ != -j_ and 0 <= x + i_ < n and 0 <= y + j_ < n and concrete[x + i_][y + j_] == 1:
                         # put water in the eroded concrete hole
                         concrete[x + i_][y + j_] = 2
@@ -60,7 +63,7 @@ def create_concrete(p):
     # 2 represents water
     for i1 in range(n):
         concrete.append([])
-        for j1 in range(n):
+        for i2 in range(n):
             r = random.random()
             if r > p:
                 # this concrete part will not erode with time
