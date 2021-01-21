@@ -92,7 +92,7 @@ window.geometry("620x750")
 window.minsize(620, 750)
 window.maxsize(620, 750)
 
-# change the icon of the frame is the icon is found
+# change the icon of the frame if the icon is found
 if path.exists("water_icon.ico"):
     window.iconbitmap("water_icon.ico")
 
@@ -115,6 +115,7 @@ start_button.pack(fill=X, side=BOTTOM)
 # create the concrete matrix with the probability set by the user
 create_concrete(p)
 
+# draw the concrete matrix on the window
 for i in range(n):
     for j in range(n):
         if concrete[i][j] == 0:
