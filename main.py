@@ -9,15 +9,20 @@ from tkinter import *
 import threading
 import time
 import random
-import os.path
 from os import path
 
 
 # -------------------------------------------------------------------------------------------------------------
 # variables (n, p and speed can be set by the user)
 
+# default values
+n_default = 100
+p_default = 0.58
+speed_default = 0.0001
+
+
 class Var:
-    def __init__(self, n=50, p=0.58, speed=0.01):
+    def __init__(self, n=n_default, p=p_default, speed=speed_default):
         self.n = n          # the size of the squared matrix is n*n
         self.p = p          # the probability of erosion for each part of the concrete
         self.speed = speed  # the speed of the animation (in seconds)
@@ -36,9 +41,10 @@ class Simulation (threading.Thread):
     def __init__(self, sec):
         threading.Thread.__init__(self)
         self.sec = sec
+        self.loop = True
 
     def run(self):
-        while len(var.to_treat) != 0:
+        while self.loop and len(var.to_treat) != 0:
             x, y = var.to_treat[0]
             var.to_treat.pop(0)
             if y == var.n-1:
@@ -69,13 +75,16 @@ class Simulation (threading.Thread):
 # -------------------------------------------------------------------------------------------------------------
 # functions
 
-def reset_values():
+def reset():
     # set all values to default
-    var.n = 50
-    var.p = 0.58
-    var.speed = 0.01
+    var.n = n_default
+    var.p = p_default
+    var.speed = speed_default
     var.concrete = []
     var.to_treat = []
+
+    # stop the animation
+    var.s.loop = False
 
     # create the default random concrete and draw it
     create_concrete(var.p)
@@ -105,8 +114,8 @@ def create_concrete(probability):
 
 def simulation():
     # start the animation
-    s = Simulation(var.speed)
-    s.start()
+    var.s = Simulation(var.speed)
+    var.s.start()
 
 
 def draw_concrete():
@@ -148,9 +157,18 @@ label_water.pack(side=TOP)
 panel = Frame(window, bg='black', bd=1, relief=SUNKEN)
 canvas = Canvas(panel, width=600, height=600)
 
-# start the animation (calling the simulation() function)
-start_button = Button(window, text='Start', font=("Arial", 20), bg='green', fg='white', command=simulation)
-start_button.pack(fill=X, side=BOTTOM)
+# the panel containing the start and the reset button
+button_panel = Frame(window, bg='black')
+button_canvas = Canvas(button_panel, width=600, height=50)
+button_panel.pack(fill=X, side=BOTTOM)
+
+# start the animation (calling the simulation function)
+start_button = Button(button_panel, text='Start', font=("Arial", 20), bg='green', fg='white', command=simulation)
+start_button.pack(fill=X, side=LEFT)
+
+# reset the animation (calling the reset function)
+reset_button = Button(button_panel, text='Reset', font=("Arial", 20), bg='red', fg='white', command=reset)
+reset_button.pack(fill=X, side=RIGHT)
 
 # -------------------------------------------------------------------------------------------------------------
 # initialization
@@ -163,5 +181,6 @@ draw_concrete()
 # finishing window
 
 canvas.pack()
+button_canvas.pack()
 panel.pack(expand=YES)
 window.mainloop()
