@@ -18,7 +18,7 @@ from os import path
 # default values
 n_default = 100
 p_default = 0.58
-speed_default = 0.0001
+speed_default = 0.001
 
 
 class Var:
@@ -26,6 +26,7 @@ class Var:
         self.n = n          # the size of the squared matrix is n*n
         self.p = p          # the probability of erosion for each part of the concrete
         self.speed = speed  # the speed of the animation (in seconds)
+        self.s = None       # the simulation thread
 
         self.concrete = []  # the matrix representing the concrete
         self.to_treat = []  # the list of the spots of the concrete where some water has to be put
